@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import PlaceItem from "./PlaceItem";
 
 type PlacesListProps = {
-  places: PlaceType[];
+  places?: PlaceType[];
 };
 
 function PlacesList({ places }: PlacesListProps) {
