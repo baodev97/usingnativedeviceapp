@@ -1,3 +1,11 @@
+export type PlaceType = {
+    title: string;
+  imageUri: string;
+  address: string;
+  location: Location;
+  id:string;
+};
+
 class Place {
   title: string;
   imageUri: string;
