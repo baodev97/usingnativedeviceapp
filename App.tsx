@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
+import AllPlaces from "./screen/AllPlaces";
 
 
 export default function App() {
   return (
-    <View>
-      <Text>Hello App Using native device</Text>
-    </View>
+    <>
+     <StatusBar barStyle={'dark-content'} />
+     <AllPlaces/>
+    </>
   );
 }
 const styles = StyleSheet.create({
