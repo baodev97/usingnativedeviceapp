@@ -1,4 +1,6 @@
 import { Colors } from "@/constants/colors";
+import { MapScreenNavigationProp } from "@/screen/Map";
+import { useNavigation } from '@react-navigation/native';
 import {
     getCurrentPositionAsync,
     PermissionStatus,
@@ -11,8 +13,11 @@ export type Location = {
   lat: number;
   lng: number;
 };
+
+
 function LocationPicker() {
   const [pickedLocation, setPickedLocation] = useState<Location | undefined>();
+  const navigation = useNavigation<MapScreenNavigationProp>();
   const [locationPermissionInfomation, requestPermission] =
     useForegroundPermissions();
 
@@ -49,7 +54,9 @@ function LocationPicker() {
     }
     return;
   }
-  function pickOnMapHandler() {}
+  function pickOnMapHandler() {
+    navigation.navigate("Map")
+  }
 
   let LocationPreview = <Text>No location picked yet.</Text>;
 
