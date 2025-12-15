@@ -4,10 +4,15 @@ import {
     PermissionStatus,
     useForegroundPermissions,
 } from "expo-location";
-import { Alert, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import OutlineButton from "../UI/OutlineButton";
-
+export type Location = {
+  lat: number;
+  lng: number;
+};
 function LocationPicker() {
+  const [pickedLocation, setPickedLocation] = useState<Location | undefined>();
   const [locationPermissionInfomation, requestPermission] =
     useForegroundPermissions();
 
@@ -32,21 +37,37 @@ function LocationPicker() {
     try {
       const hasPermission = await verifyPermissions();
       if (!hasPermission) {
-        return
+        return;
       }
       let location = await getCurrentPositionAsync();
-        console.log(location);
+      setPickedLocation({
+        lat: location.coords.latitude,
+        lng: location.coords.longitude,
+      });
     } catch (error) {
       console.log(error);
     }
-
     return;
   }
   function pickOnMapHandler() {}
 
+  let LocationPreview = <Text>No location picked yet.</Text>;
+
+  // code with using google map statis api
+  //   if(pickedLocation){
+  //     LocationPreview = <Image source={{uri:getMapPreview(pickedLocation.lat,pickedLocation.lng)}}/>
+  //   }
+  if (pickedLocation) {
+    LocationPreview = (
+      <View>
+        <Text>{pickedLocation.lat}</Text>
+        <Text>{pickedLocation.lng}</Text>
+      </View>
+    );
+  }
   return (
     <View>
-      <View style={styles.mapPreview}></View>
+      <View style={styles.mapPreview}>{LocationPreview}</View>
       <View style={styles.actions}>
         <OutlineButton
           name="location"
@@ -79,6 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary100,
     borderRadius: 8,
     flex: 1,
+    overflow:'hidden'
   },
   actions: {
     flexDirection: "row",
