@@ -1,12 +1,12 @@
 import { Colors } from "@/constants/colors";
-import { RootStackNavProp } from "@/helper/typeNativeStack";
-import { useNavigation } from '@react-navigation/native';
+import { RootStackNavProp, RootStackRouteProp } from "@/helper/typeNativeStack";
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
     getCurrentPositionAsync,
     PermissionStatus,
     useForegroundPermissions,
 } from "expo-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import OutlineButton from "../UI/OutlineButton";
 export type Location = {
@@ -18,6 +18,14 @@ export type Location = {
 function LocationPicker() {
   const [pickedLocation, setPickedLocation] = useState<Location | undefined>();
   const navigation = useNavigation<RootStackNavProp<"AddPlace">>();
+  const route = useRoute<RootStackRouteProp<"AddPlace">>();
+
+  const mapPickedLocation = route.params && {
+    lat:route.params.pickedLat,
+    lng: route.params.pickedLng
+  }
+
+  
   const [locationPermissionInfomation, requestPermission] =
     useForegroundPermissions();
 
@@ -72,6 +80,13 @@ function LocationPicker() {
       </View>
     );
   }
+
+  useEffect(()=>{
+    if(mapPickedLocation){
+        setPickedLocation(mapPickedLocation)
+    }
+  },[mapPickedLocation])
+
   return (
     <View>
       <View style={styles.mapPreview}>{LocationPreview}</View>
