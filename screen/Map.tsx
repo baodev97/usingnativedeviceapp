@@ -1,20 +1,16 @@
-import { RootStackParamList } from "@/App";
 import IconButton from "@/components/UI/IconButton";
+import { RootStackNavProp } from "@/helper/typeNativeStack";
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import MapView, { MapMarker, MapPressEvent, Region } from "react-native-maps";
 
-export type MapScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "Map"
->;
+
 function Map() {
   const [selectedLocation, setSelectedLocation] = useState<
     { lat: number; lng: number } | null
   >(null);
-  const navigation = useNavigation<MapScreenNavigationProp>();
+  const navigation = useNavigation<RootStackNavProp<"Map">>();
   const region: Region = {
     latitude: 10.7221761,
     longitude: 106.6587894,

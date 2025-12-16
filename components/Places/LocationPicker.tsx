@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/colors";
-import { MapScreenNavigationProp } from "@/screen/Map";
+import { RootStackNavProp } from "@/helper/typeNativeStack";
 import { useNavigation } from '@react-navigation/native';
 import {
     getCurrentPositionAsync,
@@ -17,7 +17,7 @@ export type Location = {
 
 function LocationPicker() {
   const [pickedLocation, setPickedLocation] = useState<Location | undefined>();
-  const navigation = useNavigation<MapScreenNavigationProp>();
+  const navigation = useNavigation<RootStackNavProp<"AddPlace">>();
   const [locationPermissionInfomation, requestPermission] =
     useForegroundPermissions();
 

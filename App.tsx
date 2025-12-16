@@ -14,9 +14,7 @@ export type RootStackParamList = {
   Map:undefined
 };
 
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
 
 export default function App() {
   return (
