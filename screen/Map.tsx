@@ -12,8 +12,8 @@ export type MapScreenNavigationProp = NativeStackNavigationProp<
 >;
 function Map() {
   const [selectedLocation, setSelectedLocation] = useState<
-    { lat: number; lng: number } | undefined
-  >();
+    { lat: number; lng: number } | null
+  >(null);
   const navigation = useNavigation<MapScreenNavigationProp>();
   const region: Region = {
     latitude: 10.7221761,
@@ -22,18 +22,17 @@ function Map() {
     longitudeDelta: 0.0421,
   };
   function selectedLocationHandler(event: MapPressEvent) {
-    
     const lat = event.nativeEvent.coordinate.latitude;
     const lng = event.nativeEvent.coordinate.longitude;
-    console.log(lat,lng)
+    console.log(lat, lng);
     setSelectedLocation({
       lat: lat,
       lng: lng,
     });
-    console.log(selectedLocation);
+    // console.log(selectedLocation);
   }
 
-  const  savePickedLocationHandler = useCallback(() => {
+  const savePickedLocationHandler = useCallback(() => {
     if (!selectedLocation) {
       Alert.alert(
         "No location picked",
@@ -45,7 +44,7 @@ function Map() {
       pickedLat: selectedLocation.lat,
       pickedLng: selectedLocation.lng,
     });
-  },[])
+  }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -58,7 +57,7 @@ function Map() {
         />
       ),
     });
-  }, [navigation,savePickedLocationHandler]);
+  }, [navigation, savePickedLocationHandler]);
 
   return (
     <MapView
