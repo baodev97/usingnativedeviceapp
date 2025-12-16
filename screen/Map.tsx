@@ -1,15 +1,15 @@
 import IconButton from "@/components/UI/IconButton";
 import { RootStackNavProp } from "@/helper/typeNativeStack";
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import MapView, { MapMarker, MapPressEvent, Region } from "react-native-maps";
 
-
 function Map() {
-  const [selectedLocation, setSelectedLocation] = useState<
-    { lat: number; lng: number } | null
-  >(null);
+  const [selectedLocation, setSelectedLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const navigation = useNavigation<RootStackNavProp<"Map">>();
   const region: Region = {
     latitude: 10.7221761,
@@ -36,10 +36,20 @@ function Map() {
       );
       return;
     }
-    navigation.navigate("AddPlace", {
-      pickedLat: selectedLocation.lat,
-      pickedLng: selectedLocation.lng,
-    });
+    // navigation.navigate({
+    //   name: "AddPlace",
+    //   params: {
+    //     pickedLat: selectedLocation.lat,
+    //     pickedLng: selectedLocation.lng,
+    //   },
+    //   merge: true,
+    // });
+    navigation.dispatch(
+  StackActions.popTo("AddPlace", {
+    pickedLat: selectedLocation.lat,
+    pickedLng: selectedLocation.lng,
+  })
+);
   }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
