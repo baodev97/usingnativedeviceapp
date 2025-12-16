@@ -1,6 +1,10 @@
 import { Colors } from "@/constants/colors";
 import { RootStackNavProp, RootStackRouteProp } from "@/helper/typeNativeStack";
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+    useIsFocused,
+    useNavigation,
+    useRoute,
+} from "@react-navigation/native";
 import {
     getCurrentPositionAsync,
     PermissionStatus,
@@ -14,18 +18,12 @@ export type Location = {
   lng: number;
 };
 
-
 function LocationPicker() {
   const [pickedLocation, setPickedLocation] = useState<Location | undefined>();
   const navigation = useNavigation<RootStackNavProp<"AddPlace">>();
   const route = useRoute<RootStackRouteProp<"AddPlace">>();
+  const isFocused = useIsFocused();
 
-  const mapPickedLocation = route.params && {
-    lat:route.params.pickedLat,
-    lng: route.params.pickedLng
-  }
-
-  
   const [locationPermissionInfomation, requestPermission] =
     useForegroundPermissions();
 
@@ -63,7 +61,7 @@ function LocationPicker() {
     return;
   }
   function pickOnMapHandler() {
-    navigation.navigate("Map")
+    navigation.navigate("Map");
   }
 
   let LocationPreview = <Text>No location picked yet.</Text>;
@@ -81,11 +79,15 @@ function LocationPicker() {
     );
   }
 
-  useEffect(()=>{
-    if(mapPickedLocation){
-        setPickedLocation(mapPickedLocation)
+  useEffect(() => {
+    if (isFocused && route.params) {
+      const mapPickedLocation = {
+        lat: route.params.pickedLat,
+        lng: route.params.pickedLng,
+      };
+      setPickedLocation(mapPickedLocation);
     }
-  },[mapPickedLocation])
+  }, [route, isFocused]);
 
   return (
     <View>
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary100,
     borderRadius: 8,
     flex: 1,
-    overflow:'hidden'
+    overflow: "hidden",
   },
   actions: {
     flexDirection: "row",
