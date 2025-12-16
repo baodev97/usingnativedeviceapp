@@ -18,7 +18,11 @@ export type Location = {
   lng: number;
 };
 
-function LocationPicker() {
+type LocationPickerProps = {
+    onPickLocation:(location:Location|undefined)=>void
+}
+
+function LocationPicker({onPickLocation}:LocationPickerProps) {
   const [pickedLocation, setPickedLocation] = useState<Location | undefined>();
   const navigation = useNavigation<RootStackNavProp<"AddPlace">>();
   const route = useRoute<RootStackRouteProp<"AddPlace">>();
@@ -88,6 +92,10 @@ function LocationPicker() {
       setPickedLocation(mapPickedLocation);
     }
   }, [route, isFocused]);
+
+  useEffect(()=>{
+    onPickLocation(pickedLocation)
+  },[pickedLocation,onPickLocation])
 
   return (
     <View>
