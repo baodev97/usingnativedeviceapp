@@ -45,11 +45,11 @@ function Map() {
     //   merge: true,
     // });
     navigation.dispatch(
-  StackActions.popTo("AddPlace", {
-    pickedLat: selectedLocation.lat,
-    pickedLng: selectedLocation.lng,
-  })
-);
+      StackActions.popTo("AddPlace", {
+        pickedLat: selectedLocation.lat,
+        pickedLng: selectedLocation.lng,
+      })
+    );
   }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
