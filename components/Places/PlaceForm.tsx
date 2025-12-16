@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/colors";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import Button from "../UI/Button";
 import ImagePicker from "./ImagePicker";
@@ -16,12 +16,14 @@ function PlaceForm (){
     function takeImageHandler(imageUri:string){
         setSelectedImage(imageUri)
     }
-    function pickLocationHandler(location:Location|undefined){
+    const  pickLocationHandler = useCallback((location:Location|undefined) =>{
         setPickedLocation(location)
-    }
+    },[])
 
     function savePlaceHandler(){
-
+        console.log(enteredTitle)
+        console.log(selectedImage)
+        console.log(pickedLocation)
     }
 
 
