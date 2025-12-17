@@ -8,7 +8,11 @@ import { useState } from "react";
 import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import OutlineButton from "../UI/OutlineButton";
 
-function ImagePicker() {
+type ImagePickerProps = {
+    onImageTake:(imageUri:string)=>void
+}
+
+function ImagePicker({onImageTake}:ImagePickerProps) {
   const [cameraPermissionInformation, requestPermission] = useCameraPermissions();
   const [pickedImage, setPickedImage] = useState<undefined | string>();
   async function verifyPermissions() {
@@ -40,6 +44,7 @@ function ImagePicker() {
 
     if (imageUri) {
       setPickedImage(imageUri);
+      onImageTake(imageUri)
     }
   }
   let imagePreview = <Text>No Image taken yet.</Text>;

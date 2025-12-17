@@ -1,12 +1,17 @@
 import { Colors } from "@/constants/colors";
-import { MapScreenNavigationProp } from "@/screen/Map";
-import { useNavigation } from '@react-navigation/native';
+import { RootStackNavProp, RootStackRouteProp } from "@/helper/typeNativeStack";
+import { getAdressNoCallApi } from "@/util/location";
+import {
+    useIsFocused,
+    useNavigation,
+    useRoute,
+} from "@react-navigation/native";
 import {
     getCurrentPositionAsync,
     PermissionStatus,
     useForegroundPermissions,
 } from "expo-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import OutlineButton from "../UI/OutlineButton";
 export type Location = {
@@ -14,10 +19,22 @@ export type Location = {
   lng: number;
 };
 
+type LocationPickerProps = {
+  onPickLocation: ({
+    location,
+    address,
+  }: {
+    location: Location;
+    address: string;
+  }) => void;
+};
 
-function LocationPicker() {
+function LocationPicker({ onPickLocation }: LocationPickerProps) {
   const [pickedLocation, setPickedLocation] = useState<Location | undefined>();
-  const navigation = useNavigation<MapScreenNavigationProp>();
+  const navigation = useNavigation<RootStackNavProp<"AddPlace">>();
+  const route = useRoute<RootStackRouteProp<"AddPlace">>();
+  const isFocused = useIsFocused();
+
   const [locationPermissionInfomation, requestPermission] =
     useForegroundPermissions();
 
@@ -55,7 +72,7 @@ function LocationPicker() {
     return;
   }
   function pickOnMapHandler() {
-    navigation.navigate("Map")
+    navigation.navigate("Map");
   }
 
   let LocationPreview = <Text>No location picked yet.</Text>;
@@ -72,6 +89,34 @@ function LocationPicker() {
       </View>
     );
   }
+
+  useEffect(() => {
+    if (isFocused && route.params) {
+      const mapPickedLocation = {
+        lat: route.params.pickedLat,
+        lng: route.params.pickedLng,
+      };
+      setPickedLocation(mapPickedLocation);
+    }
+  }, [route, isFocused]);
+
+  useEffect(() => {
+    async function handlerLocation() {
+      if (pickedLocation) {
+        // getAddress(pickedLocation.lat,pickedLocation.lng);
+        const address = await getAdressNoCallApi(
+          pickedLocation.lat,
+          pickedLocation.lng
+        );
+        onPickLocation({
+          location: {...pickedLocation},
+          address: address,
+        });
+      }
+    }
+    handlerLocation();
+  }, [pickedLocation, onPickLocation]);
+
   return (
     <View>
       <View style={styles.mapPreview}>{LocationPreview}</View>
@@ -107,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary100,
     borderRadius: 8,
     flex: 1,
-    overflow:'hidden'
+    overflow: "hidden",
   },
   actions: {
     flexDirection: "row",
