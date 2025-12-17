@@ -1,7 +1,7 @@
 import IconButton from "@/components/UI/IconButton";
 import { RootStackNavProp, RootStackRouteProp } from "@/helper/typeNativeStack";
 import { StackActions, useNavigation } from "@react-navigation/native";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import MapView, { MapMarker, MapPressEvent, Region } from "react-native-maps";
 
@@ -16,10 +16,15 @@ type InitLocation = {
 
 
 function Map({ route }: MapProps) {
-  const initLocation: InitLocation | undefined = route.params && {
+  const initLocation = useMemo<InitLocation | undefined>(() => {
+  if (!route.params) return undefined;
+
+  return {
     lat: route.params.initLat,
     lng: route.params.initLng,
   };
+}, [route.params]);
+
   const [selectedLocation, setSelectedLocation] = useState(initLocation);
   const navigation = useNavigation<RootStackNavProp<"Map">>();
 
