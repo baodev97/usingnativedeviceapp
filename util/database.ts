@@ -11,5 +11,21 @@ export async function initBb() {
       lat REAL NOT NULL,
       lng REAL NOT NULL
     );`);
-    return result
+  return result;
+}
+
+export async function insertPlace(place: {
+  title: string;
+  imageUri: string;
+  address: string;
+  lat: number;
+  lng: number;
+}) {
+  const result = (await db).runAsync(
+    `INSERT INTO places (title, imageUri, address, lat, lng)
+     VALUES (?, ?, ?, ?, ?)`,
+    [place.title, place.imageUri, place.address, place.lat, place.lng]
+  );
+
+  return result;
 }

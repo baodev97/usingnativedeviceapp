@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { StatusBar, StyleSheet } from "react-native";
 import IconButton from "./components/UI/IconButton";
@@ -11,27 +11,34 @@ import AllPlaces from "./screen/AllPlaces";
 import Map from "./screen/Map";
 import { initBb } from "./util/database";
 
-
 export type RootStackParamList = {
-  AllPlaces: {place:PlaceType},
-  AddPlace:undefined| {pickedLat:number, pickedLng:number},
-  Map:undefined
+  AllPlaces: { place: PlaceType };
+  AddPlace: undefined | { pickedLat: number; pickedLng: number };
+  Map: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {
-  const [dbInitialized,setDbInitiallized] = useState(false);
+SplashScreen.preventAutoHideAsync();
 
-  useEffect(()=>{
-    initBb().then(()=>{
-      setDbInitiallized(true)
-    }).catch(err =>{
-      console.log(err)
-    })
-  },[])
-  if(!dbInitialized){
-    return <AppLoading/>
+export default function App() {
+  const [dbInitialized, setDbInitiallized] = useState(false);
+
+  useEffect(() => {
+    initBb()
+      .then(() => {
+        setDbInitiallized(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(async () => {
+        setDbInitiallized(true);
+        await SplashScreen.hideAsync();
+      });
+  }, []);
+  if (!dbInitialized) {
+    return null;
   }
 
   return (
@@ -39,15 +46,17 @@ export default function App() {
       <StatusBar barStyle={"dark-content"} />
 
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{
-          headerStyle:{
-            backgroundColor:Colors.primary500
-          },
-          headerTintColor:Colors.gray700,
-          contentStyle:{
-            backgroundColor:Colors.gray700
-          }
-        }}>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: Colors.primary500,
+            },
+            headerTintColor: Colors.gray700,
+            contentStyle: {
+              backgroundColor: Colors.gray700,
+            },
+          }}
+        >
           <Stack.Screen
             name="AllPlaces"
             component={AllPlaces}
@@ -70,7 +79,7 @@ export default function App() {
               title: "Add a new Place",
             }}
           />
-          <Stack.Screen name="Map" component={Map}/>
+          <Stack.Screen name="Map" component={Map} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
