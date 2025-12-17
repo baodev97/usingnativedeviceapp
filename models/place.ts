@@ -25,7 +25,7 @@ class Place {
     this.imageUri = imageUri;
     this.address = address;
     this.location = location;
-    this.id = new Date().toString() + Math.random().toString();
+    this.id = Math.random().toString();
   }
 }
 

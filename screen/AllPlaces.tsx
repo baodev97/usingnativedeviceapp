@@ -20,7 +20,6 @@ function AllPlaces({ route }: AllPlacesProps) {
     }
   }, [isFocused, route.params]);
 
-  console.log("loaded", loadedPlace)
-  return <PlacesList />;
+  return <PlacesList places = {loadedPlace} />;
 }
 export default AllPlaces;
