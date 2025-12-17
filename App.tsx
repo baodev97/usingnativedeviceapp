@@ -15,7 +15,7 @@ import { initBb } from "./util/database";
 export type RootStackParamList = {
   AllPlaces: { place: PlaceType };
   AddPlace: undefined | { pickedLat: number; pickedLng: number };
-  Map: undefined;
+  Map: {initLat:number,initLng:number}|undefined;
   PlaceDetail:{idPlace:string}
 };
 

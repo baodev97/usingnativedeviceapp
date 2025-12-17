@@ -16,7 +16,11 @@ function PlaceDetail({ route, navigation }: PlaceDetailProps) {
 
   const idPlace = route.params?.idPlace;
 
-  function handlerOpenMap() {}
+  function handlerOpenMap() {
+    if(fetchedPlace?.location){
+        navigation.navigate('Map',{initLat:fetchedPlace?.location.lat,initLng:fetchedPlace?.location.lng})
+    }
+  }
 
   useEffect(() => {
     async function getPlace() {

@@ -1,26 +1,38 @@
 import IconButton from "@/components/UI/IconButton";
-import { RootStackNavProp } from "@/helper/typeNativeStack";
+import { RootStackNavProp, RootStackRouteProp } from "@/helper/typeNativeStack";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import MapView, { MapMarker, MapPressEvent, Region } from "react-native-maps";
 
-function Map() {
-  const [selectedLocation, setSelectedLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
+type MapProps = {
+  route: RootStackRouteProp<"Map">;
+};
+
+type InitLocation = {
+    lat:number,
+    lng:number
+}
+
+
+function Map({ route }: MapProps) {
+  const initLocation: InitLocation | undefined = route.params && {
+    lat: route.params.initLat,
+    lng: route.params.initLng,
+  };
+  const [selectedLocation, setSelectedLocation] = useState(initLocation);
   const navigation = useNavigation<RootStackNavProp<"Map">>();
+
   const region: Region = {
-    latitude: 10.7221761,
-    longitude: 106.6587894,
+    latitude: initLocation? initLocation.lat :10.7221761,
+    longitude: initLocation? initLocation.lng :106.6587894,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
   function selectedLocationHandler(event: MapPressEvent) {
     const lat = event.nativeEvent.coordinate.latitude;
     const lng = event.nativeEvent.coordinate.longitude;
-    console.log(lat, lng);
+    // console.log(lat, lng);
     setSelectedLocation({
       lat: lat,
       lng: lng,
@@ -53,6 +65,7 @@ function Map() {
   }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
+    if(initLocation) return
     navigation.setOptions({
       headerRight: ({ tintColor }) => (
         <IconButton
@@ -63,7 +76,7 @@ function Map() {
         />
       ),
     });
-  }, [navigation, savePickedLocationHandler]);
+  }, [navigation, savePickedLocationHandler,initLocation]);
 
   return (
     <MapView
