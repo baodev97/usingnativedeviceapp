@@ -1,6 +1,6 @@
 import OutlineButton from "@/components/UI/OutlineButton";
 import { Colors } from "@/constants/colors";
-import { RootStackRouteProp } from "@/helper/typeNativeStack";
+import { RootStackNavProp, RootStackRouteProp } from "@/helper/typeNativeStack";
 import { PlaceType } from "@/models/place";
 import { getPlaceById } from "@/util/database";
 import { useEffect, useState } from "react";
@@ -8,26 +8,39 @@ import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 type PlaceDetailProps = {
   route: RootStackRouteProp<"PlaceDetail">;
+  navigation: RootStackNavProp<"PlaceDetail">;
 };
 
-function PlaceDetail({ route }: PlaceDetailProps) {
-    const [fetchedPlace,setFetchedPlace]= useState<null|PlaceType>(null);
+function PlaceDetail({ route, navigation }: PlaceDetailProps) {
+  const [fetchedPlace, setFetchedPlace] = useState<null | PlaceType>(null);
+
   const idPlace = route.params?.idPlace;
 
   function handlerOpenMap() {}
 
-
-  useEffect(()=>{
-    async function getPlace(){
-        const res = await getPlaceById(idPlace)
-        setFetchedPlace(res);
-        
+  useEffect(() => {
+    async function getPlace() {
+      const res = await getPlaceById(idPlace);
+      setFetchedPlace(res);
+      navigation.setOptions({
+        title: res?.title,
+      });
     }
-    getPlace()
-  },[idPlace])
+    getPlace();
+  }, [idPlace, navigation]);
+
+  if(!fetchedPlace){
+    return (
+        <View style={styles.fallback}>
+            <Text>Loading place data....</Text>
+        </View>
+    )
+  }
+
+
   return (
     <ScrollView>
-      <Image style={styles.image} source={{uri:fetchedPlace?.imageUri}}/>
+      <Image style={styles.image} source={{ uri: fetchedPlace?.imageUri }} />
       <View style={styles.locationContainer}>
         <View style={styles.addressContainer}>
           <Text style={styles.address}>{fetchedPlace?.address}</Text>
@@ -68,4 +81,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  fallback:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  }
 });
