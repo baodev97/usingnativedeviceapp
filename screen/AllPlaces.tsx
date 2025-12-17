@@ -1,15 +1,26 @@
 import PlacesList from "@/components/Places/PlacesList";
-import { useRoute } from "@react-navigation/native";
-import { useEffect } from "react";
+import { RootStackRouteProp } from "@/helper/typeNativeStack";
+import { PlaceType } from "@/models/place";
+import { useIsFocused } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 
-function AllPlaces (){
-   
- const route = useRoute();
+type AllPlacesProps = {
+  route: RootStackRouteProp<"AllPlaces">;
+};
+type LoadedPlace = [] | PlaceType[];
+
+function AllPlaces({ route }: AllPlacesProps) {
+  const [loadedPlace, setLoadedPlace] = useState<LoadedPlace>([]);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("AddPlace route.key =", route.key);
-  }, [route.key]);
+    if (isFocused && route.params) {
+      setLoadedPlace((currentPlaces) => [...currentPlaces,route.params.place]);
+    }
+  }, [isFocused, route.params]);
 
-    return <PlacesList />
+  console.log("loaded", loadedPlace)
+  return <PlacesList />;
 }
 export default AllPlaces;

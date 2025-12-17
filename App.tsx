@@ -10,7 +10,7 @@ import Map from "./screen/Map";
 
 
 export type RootStackParamList = {
-  AllPlaces: undefined|{place:PlaceType},
+  AllPlaces: {place:PlaceType},
   AddPlace:undefined| {pickedLat:number, pickedLng:number},
   Map:undefined
 };
