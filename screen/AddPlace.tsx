@@ -12,9 +12,7 @@ function AddPlace({ navigation }: AddPlaceProps) {
   async function createPlaceHandler(place: PlaceType) {
     await insertPlace(place);
     navigation.dispatch(
-      StackActions.popTo("AllPlaces", {
-        place: place,
-      })
+      StackActions.popTo("AllPlaces")
     );
   }
 
