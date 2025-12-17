@@ -1,3 +1,4 @@
+import { Location } from "@/components/Places/LocationPicker";
 import * as SQLite from "expo-sqlite";
 
 export const db = SQLite.openDatabaseAsync("places.db");
@@ -18,14 +19,27 @@ export async function insertPlace(place: {
   title: string;
   imageUri: string;
   address: string;
-  lat: number;
-  lng: number;
+  location:Location
 }) {
   const result = (await db).runAsync(
     `INSERT INTO places (title, imageUri, address, lat, lng)
      VALUES (?, ?, ?, ?, ?)`,
-    [place.title, place.imageUri, place.address, place.lat, place.lng]
+    [place.title, place.imageUri, place.address, place.location.lat, place.location.lng]
   );
-
+  console.log(result,"result insert")
   return result;
+}
+
+
+export async function fetchPlaces(){
+    const rows = (await db).getAllAsync<{
+    id: number;
+    title: string;
+    imageUri: string;
+    address: string;
+    lat: number;
+    lng: number;
+  }>('SELECT * FROM places');
+
+  return rows;
 }
