@@ -71,3 +71,27 @@ export async function fetchPlaces(): Promise<PlaceType[]> {
 
   return places;
 }
+
+export async function getPlaceById(id: string): Promise<PlaceType | null> {
+  const database = await db;
+
+  const row = await database.getFirstAsync<PlaceRow>(
+    "SELECT * FROM places WHERE id = ?",
+    [id]
+  );
+
+  if (!row) return null;
+
+  const place: PlaceType = {
+    id: row.id.toString(),
+    title: row.title,
+    imageUri: row.imageUri,
+    address: row.address,
+    location: {
+      lat: row.lat,
+      lng: row.lng,
+    },
+  };
+
+  return place;
+}

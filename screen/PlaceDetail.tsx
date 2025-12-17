@@ -1,6 +1,9 @@
 import OutlineButton from "@/components/UI/OutlineButton";
 import { Colors } from "@/constants/colors";
 import { RootStackRouteProp } from "@/helper/typeNativeStack";
+import { PlaceType } from "@/models/place";
+import { getPlaceById } from "@/util/database";
+import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 type PlaceDetailProps = {
@@ -8,15 +11,26 @@ type PlaceDetailProps = {
 };
 
 function PlaceDetail({ route }: PlaceDetailProps) {
+    const [fetchedPlace,setFetchedPlace]= useState<null|PlaceType>(null);
   const idPlace = route.params?.idPlace;
 
   function handlerOpenMap() {}
+
+
+  useEffect(()=>{
+    async function getPlace(){
+        const res = await getPlaceById(idPlace)
+        setFetchedPlace(res);
+        
+    }
+    getPlace()
+  },[idPlace])
   return (
     <ScrollView>
-      <Image style={styles.image} />
+      <Image style={styles.image} source={{uri:fetchedPlace?.imageUri}}/>
       <View style={styles.locationContainer}>
         <View style={styles.addressContainer}>
-          <Text style={styles.address}>Address {idPlace}</Text>
+          <Text style={styles.address}>{fetchedPlace?.address}</Text>
         </View>
         <OutlineButton
           name="map"
@@ -24,7 +38,7 @@ function PlaceDetail({ route }: PlaceDetailProps) {
           color={Colors.primary500}
           onPress={handlerOpenMap}
         >
-          Open Map
+          View On Map
         </OutlineButton>
       </View>
     </ScrollView>
