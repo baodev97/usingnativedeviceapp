@@ -1,14 +1,11 @@
 import PlaceForm from "@/components/Places/PlaceForm";
-import { useRoute } from "@react-navigation/native";
-import { useEffect } from "react";
+import { RootStackNavProp } from "@/helper/typeNativeStack";
 
+type AddPlaceProps = {
+    navigation: RootStackNavProp<"AddPlace">
+}
 
-function AddPlace (){
-    const route = useRoute();
-
-  useEffect(() => {
-    console.log("AddPlace route.key =", route.key);
-  }, [route.key]);
+function AddPlace ({navigation}:AddPlaceProps){
 
     return <PlaceForm/>
 }
