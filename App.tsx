@@ -1,5 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AppLoading from 'expo-app-loading';
+import { useEffect, useState } from "react";
 import { StatusBar, StyleSheet } from "react-native";
 import IconButton from "./components/UI/IconButton";
 import { Colors } from "./constants/colors";
@@ -7,6 +9,7 @@ import { PlaceType } from "./models/place";
 import AddPlace from "./screen/AddPlace";
 import AllPlaces from "./screen/AllPlaces";
 import Map from "./screen/Map";
+import { initBb } from "./util/database";
 
 
 export type RootStackParamList = {
@@ -18,6 +21,19 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  const [dbInitialized,setDbInitiallized] = useState(false);
+
+  useEffect(()=>{
+    initBb().then(()=>{
+      setDbInitiallized(true)
+    }).catch(err =>{
+      console.log(err)
+    })
+  },[])
+  if(!dbInitialized){
+    return <AppLoading/>
+  }
+
   return (
     <>
       <StatusBar barStyle={"dark-content"} />
