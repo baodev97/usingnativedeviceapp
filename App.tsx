@@ -16,7 +16,7 @@ export type RootStackParamList = {
   AllPlaces: { place: PlaceType };
   AddPlace: undefined | { pickedLat: number; pickedLng: number };
   Map: undefined;
-  PlaceDetail:{id:string}
+  PlaceDetail:{idPlace:string}
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

@@ -8,7 +8,7 @@ type PlaceDetailProps = {
 };
 
 function PlaceDetail({ route }: PlaceDetailProps) {
-  const idPlace = route.params?.id;
+  const idPlace = route.params?.idPlace;
 
   function handlerOpenMap() {}
   return (
