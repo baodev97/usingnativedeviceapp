@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/colors";
 import { RootStackNavProp, RootStackRouteProp } from "@/helper/typeNativeStack";
+import { getAdressNoCallApi } from "@/util/location";
 import {
     useIsFocused,
     useNavigation,
@@ -19,10 +20,16 @@ export type Location = {
 };
 
 type LocationPickerProps = {
-    onPickLocation:(location:Location|undefined)=>void
-}
+  onPickLocation: ({
+    location,
+    address,
+  }: {
+    location: Location;
+    address: string;
+  }) => void;
+};
 
-function LocationPicker({onPickLocation}:LocationPickerProps) {
+function LocationPicker({ onPickLocation }: LocationPickerProps) {
   const [pickedLocation, setPickedLocation] = useState<Location | undefined>();
   const navigation = useNavigation<RootStackNavProp<"AddPlace">>();
   const route = useRoute<RootStackRouteProp<"AddPlace">>();
@@ -93,9 +100,22 @@ function LocationPicker({onPickLocation}:LocationPickerProps) {
     }
   }, [route, isFocused]);
 
-  useEffect(()=>{
-    onPickLocation(pickedLocation)
-  },[pickedLocation,onPickLocation])
+  useEffect(() => {
+    async function handlerLocation() {
+      if (pickedLocation) {
+        // getAddress(pickedLocation.lat,pickedLocation.lng);
+        const address = await getAdressNoCallApi(
+          pickedLocation.lat,
+          pickedLocation.lng
+        );
+        onPickLocation({
+          location: {...pickedLocation},
+          address: address,
+        });
+      }
+    }
+    handlerLocation();
+  }, [pickedLocation, onPickLocation]);
 
   return (
     <View>

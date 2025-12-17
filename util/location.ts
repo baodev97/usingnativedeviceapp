@@ -7,7 +7,9 @@ export function getMapPreview(lat: number, lang: number) {
   return imagePreviewUrl;
 }
 
-async function getAddress(lat: number, lng: number) {
+
+// call API Reverse geocoding response - V4
+export async function getAddress(lat: number, lng: number) {
   const url = `https://geocode.googleapis.com/v4beta/geocode/location?location.latitude=${lat}&location.longitude=-${lng}&key=${GOOGLE_API_KEY}`;
 
   try {
@@ -18,4 +20,10 @@ async function getAddress(lat: number, lng: number) {
   } catch (error) {
     throw new Error("Failed to fetch address");
   }
+}
+
+// get Address no call API
+export async function getAdressNoCallApi(lat: number, lng: number){
+    const defaultAddress = `Location-${lat}-${lng}-HCM`
+    return defaultAddress
 }
