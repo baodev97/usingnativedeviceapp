@@ -1,3 +1,5 @@
+import { Location } from "@/components/Places/LocationPicker";
+
 export type PlaceType = {
     title: string;
   imageUri: string;

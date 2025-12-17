@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/colors";
+import Place, { PlaceType } from "@/models/place";
 import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import Button from "../UI/Button";
@@ -11,7 +12,11 @@ type PickedLocation = {
   address: string;
 };
 
-function PlaceForm() {
+type PlaceFormProps = {
+  onCreatePlace: (place:PlaceType) => void;
+};
+
+function PlaceForm({ onCreatePlace }: PlaceFormProps) {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [selectedImage, setSelectedImage] = useState<undefined | string>();
   const [pickedLocation, setPickedLocation] = useState<
@@ -25,13 +30,7 @@ function PlaceForm() {
     setSelectedImage(imageUri);
   }
   const pickLocationHandler = useCallback(
-    ({
-      location,
-      address,
-    }: {
-      location: Location;
-      address: string;
-    }) => {
+    ({ location, address }: { location: Location; address: string }) => {
       const inforPickedLocation = { ...location, address };
       setPickedLocation(inforPickedLocation);
     },
@@ -39,9 +38,16 @@ function PlaceForm() {
   );
 
   function savePlaceHandler() {
-    console.log(enteredTitle);
-    console.log(selectedImage);
-    console.log(pickedLocation);
+    const place = new Place(
+      enteredTitle,
+      selectedImage ? selectedImage : "",
+      pickedLocation ? pickedLocation.address : "",
+      {
+        lat: pickedLocation ? pickedLocation.lat : 0,
+        lng: pickedLocation ? pickedLocation.lng : 0,
+      }
+    );
+    onCreatePlace(place);
   }
 
   return (

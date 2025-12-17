@@ -3,13 +3,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar, StyleSheet } from "react-native";
 import IconButton from "./components/UI/IconButton";
 import { Colors } from "./constants/colors";
+import { PlaceType } from "./models/place";
 import AddPlace from "./screen/AddPlace";
 import AllPlaces from "./screen/AllPlaces";
 import Map from "./screen/Map";
 
 
 export type RootStackParamList = {
-  AllPlaces: undefined,
+  AllPlaces: undefined|{place:PlaceType},
   AddPlace:undefined| {pickedLat:number, pickedLng:number},
   Map:undefined
 };
