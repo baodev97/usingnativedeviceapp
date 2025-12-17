@@ -9,12 +9,14 @@ import { PlaceType } from "./models/place";
 import AddPlace from "./screen/AddPlace";
 import AllPlaces from "./screen/AllPlaces";
 import Map from "./screen/Map";
+import PlaceDetail from "./screen/PlaceDetail";
 import { initBb } from "./util/database";
 
 export type RootStackParamList = {
   AllPlaces: { place: PlaceType };
   AddPlace: undefined | { pickedLat: number; pickedLng: number };
   Map: undefined;
+  PlaceDetail:{id:string}
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -80,6 +82,7 @@ export default function App() {
             }}
           />
           <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen name="PlaceDetail" component={PlaceDetail}/>
         </Stack.Navigator>
       </NavigationContainer>
     </>
